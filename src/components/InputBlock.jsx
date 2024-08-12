@@ -1,32 +1,43 @@
 import { useRef } from "react";
-import { getWeather } from "../store/weatherSlice.js";
+import { getWeather } from "../store/weatherSlice";
 import { useDispatch } from "react-redux";
 
-const InputBlock = () => {
+function InputBlock() {
    let inputRef = useRef(null);
    const dispatch = useDispatch();
-
-   const handleClick = () => {
+   const clickHandler = () => {
       dispatch(getWeather(inputRef.current.value));
    };
 
-   dispatch(getWeather("London"));
+   const keyHandler = (event) => {
+      if (event.key === "Enter") {
+         clickHandler();
+         inputRef.current.focus();
+      }
+   };
+
+   dispatch(getWeather("Moscow"));
 
    return (
-      <div className="flex justify-around space-between rounded-lg shadow-xl p-5 bg-white/50">
+      <div
+         className="flex justify-around rounded-lg shadow-xl p-5 bg-white/50"
+         onKeyDownCapture={keyHandler}
+      >
          <input
+            className="capitalize outline-none text-xl w-3/4 bg-white/50 rounded-lg px-5 py-2"
             ref={inputRef}
-            placeholder="Введите город..."
-            className="capitalize outline-none text-lg rounded-lg bg-white/50 w-3/4 px-5 py-2"
+            placeholder="City name"
+            defaultValue="Moscow"
+            autoFocus
          />
          <button
-            className="bg-white/50 rounded-lg px-5 py-2 text-xl ml-2 border-solid"
-            onClick={handleClick}
+            className="bg-white/50 rounded-lg px-5 py-2 text-xl"
+            onClick={clickHandler}
          >
-            button
+            Search
          </button>
       </div>
    );
-};
+}
 
 export default InputBlock;
